@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>巾帼英雄：花木兰 (中日双语互动)</title>
+    <style>
+        :root {
+            --primary: #8b0000; /* 中国红 */
+            --bg: #f4ecd8; /* 宣纸底色 */
+            --text: #333;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Sans', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg);
+            background-image: linear-gradient(90deg, transparent 50%, rgba(139,0,0,0.05) 50%), linear-gradient(rgba(139,0,0,0.05) 50%, transparent 50%);
+            background-size: 20px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text);
+        }
+        .container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 90%;
+            border-top: 5px solid var(--primary);
+            text-align: center;
+            position: relative;
+        }
+        h1 {
+            color: var(--primary);
+            margin-bottom: 5px;
+            font-size: 28px;
+        }
+        .jp-title {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+            font-weight: normal;
+        }
+        .story-card {
+            background: #faf8f5;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            min-height: 180px;
+            text-align: left;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .cn-text {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #222;
+        }
+        .jp-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #555;
+            padding-top: 10px;
+            border-top: 1px dashed #ccc;
+        }
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(139,0,0,0.2);
+        }
+        .btn:hover {
+            background: #a00000;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(139,0,0,0.3);
+        }
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+        .progress {
+            font-size: 14px;
+            color: #888;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>巾帼英雄：花木兰</h1>
+    <div class="jp-title">女中豪傑：花木蘭（かぼくらん）</div>
+    
+    <div class="story-card" id="story-card">
+        <div class="cn-text" id="cn-text">点击下方按钮，开启双语故事体验。</div>
+        <div class="jp-text" id="jp-text">下のボタンをクリックして、バイリンガル物語を始めましょう。</div>
+    </div>
+
+    <button class="btn" id="next-btn" onclick="nextSlide()">开始阅读 (読み始める)</button>
+    <div class="progress" id="progress">0 / 4</div>
+</div>
+
+<script>
+    // 中日双语故事数据
+    const storyData = [
+        {
+            cn: "【第一幕：替父从军】<br>北魏时期，有一位勇敢的女子名叫花木兰。当时战火纷飞，朝廷要求每家出男丁参军。为了不让年迈的父亲受苦，木兰决定女扮男装，代父出征。",
+            jp: "【第一幕：父の代わりに従軍】<br>北魏時代、花木蘭（かぼくらん）という勇敢な女性がいました。戦乱の時代、朝廷は各家に男子の出兵を求めました。年老いた父を苦しませないため、木蘭は男装して父の代わりに出征することを決意しました。"
+        },
+        {
+            cn: "【第二幕：沙场立功】<br>木兰在战场上隐藏身份，历经无数次生死考验。她武艺高强，有勇有谋，屡建奇功，最终帮助军队击退了敌军。",
+            jp: "【第二幕：戦場での功績】<br>木蘭は戦場で身分を隠し、数え切れないほどの生死の試練を乗り越えました。彼女は武芸に優れ、勇気と知略を兼ね備え、幾度も大きな功績を立て、最終的に軍が敵軍を撃退するのを助けました。"
+        },
+        {
+            cn: "【第三幕：辞官还乡】<br>战争胜利后，皇帝想要封木兰为大官，赐予她荣华富贵。但木兰婉拒了赏赐，她唯一的愿望就是骑上快马，回到故乡与家人团聚。",
+            jp: "【第三幕：辞職と帰郷】<br>戦争の勝利後、皇帝は木蘭を高官に任じ、富と名誉を与えようとしました。しかし木蘭は恩賞を辞退し、彼女の唯一の願いは早馬に乗って故郷に帰り、家族と再会することでした。"
+        },
+        {
+            cn: "【第四幕：女儿身现】<br>回到家中，木兰脱下战袍，换上女子的装束。同行的战友们看到这一幕，才惊讶地发现，这位在战场上英勇无敌的将军，竟然是一位美丽的女子。",
+            jp: "【第四幕：女性の姿へ】<br>家に帰ると、木蘭は戦袍（せんぽう）を脱ぎ、女性の装束に着替えました。同行した戦友たちはこの光景を見て、戦場で無敵の勇猛さを誇った将軍が、美しい女性であったことに驚きました。"
+        }
+    ];
+
+    let currentIndex = 0;
+    const cnText = document.getElementById('cn-text');
+    const jpText = document.getElementById('jp-text');
+    const nextBtn = document.getElementById('next-btn');
+    const progress = document.getElementById('progress');
+
+    function nextSlide() {
+        if (currentIndex < storyData.length) {
+            // 添加淡入淡出效果
+            cnText.style.opacity = 0;
+            jpText.style.opacity = 0;
+            
+            setTimeout(() => {
+                cnText.innerHTML = storyData[currentIndex].cn;
+                jpText.innerHTML = storyData[currentIndex].jp;
+                cnText.style.opacity = 1;
+                jpText.style.opacity = 1;
+                
+                currentIndex++;
+                progress.innerText = currentIndex + " / " + storyData.length;
+                
+                if (currentIndex === storyData.length) {
+                    nextBtn.innerText = "阅读完毕 (読了)";
+                    nextBtn.disabled = true;
+                    nextBtn.style.background = "#4caf50";
+                } else {
+                    nextBtn.innerText = "继续阅读 (次へ)";
+                }
+            }, 300);
+        }
+    }
+    
+    // 初始化渐变动画
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .cn-text, .jp-text { transition: opacity 0.3s ease; }
+    `;
+    document.head.appendChild(style);
+</script>
+
+</body>
+</html>
